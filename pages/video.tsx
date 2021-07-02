@@ -19,7 +19,6 @@ const video = () => {
     const { data } = getQueryParams(window.location.search);
     setVidId(data);
   }, []);
-  console.log(`https://www.youtube.com/watch?v=${VidId}`);
 
   return (
     <div>

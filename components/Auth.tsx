@@ -1,12 +1,11 @@
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import firebase from "../firebase/firebase";
-
-const Auth = ({ data, setData }) => {
+const Auth = ({ setData }) => {
+  const [checkData, setCheckData] = useState({});
   const authclick = async () => {
     const auth = firebase.auth();
     const provider = new firebase.auth.GoogleAuthProvider();
-
-    // scope of the application
     provider.addScope("https://www.googleapis.com/auth/youtube");
     provider.addScope(
       "https://www.googleapis.com/auth/youtube.channel-memberships.creator"
@@ -19,22 +18,21 @@ const Auth = ({ data, setData }) => {
       "https://www.googleapis.com/auth/youtubepartner-channel-audit"
     );
     const res = await auth.signInWithPopup(provider);
-    console.log(res);
     setData(res);
     if (typeof window !== "undefined") {
       sessionStorage.setItem("yt-res", JSON.stringify(res));
     }
   };
 
-  let da;
-  if (typeof window !== "undefined") {
-    da = sessionStorage.getItem("yt-res");
-    da = JSON.parse(da);
-  }
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCheckData(sessionStorage.getItem("yt-res"));
+    }
+  }, []);
 
   return (
     <div>
-      {da === null ? (
+      {checkData === null ? (
         <div className={"flex flex-col items-center justify-center h-screen "}>
           <button
             className={

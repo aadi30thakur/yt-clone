@@ -1,7 +1,6 @@
 import "tailwindcss/tailwind.css";
 import Auth from "../components/Auth";
 import { useEffect, useState } from "react";
-
 function MyApp({ Component, pageProps }) {
   const [data, setdata] = useState({});
   useEffect(() => {
@@ -12,7 +11,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <div>
       {data === null ? (
-        <Auth setData={setdata} data={data} />
+        <Auth setData={setdata} />
       ) : (
         <div>
           <Component {...pageProps} />

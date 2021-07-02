@@ -2,8 +2,6 @@ import { AiFillEye } from "react-icons/ai";
 import Link from "next/link";
 import Image from "next/image";
 const Card = ({ item }) => {
-  console.log(item);
-
   return (
     <div className="flex justify-center p-6 text-6xl text-white rounded-xl ">
       <Link
@@ -19,7 +17,7 @@ const Card = ({ item }) => {
               className="rounded-lg "
               width={300}
               height={200}
-              src={item.snippet.thumbnails.high.url}
+              src={item.snippet.thumbnails.medium.url}
               alt={item.snippet.title}
             />
           </div>

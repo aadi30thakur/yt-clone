@@ -1,28 +1,21 @@
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Header from "../components/Header";
-
-let Videos = [];
+import Head from "next/head";
 export default function Home() {
-  // const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nextPage, setNextPage] = useState("");
   const [token, setOauthAccessToken] = useState("");
   const [isTokenPresent, setIsTokenPresent] = useState(true);
-
   const fetchPopular = async () => {
     if (typeof window !== "undefined") {
       setOauthAccessToken(sessionStorage.getItem("yt-res"));
     }
-
     const API = process.env.NEXT_PUBLIC_YOUTUE_API;
     const API_KEY = process.env.NEXT_PUBLIC_GCP_YOUTUBE_APIKEY;
-    // console.log("HIT", token);
     setLoading(true);
-    console.log(token);
-
     const res = await fetch(
       `${API}videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=20&regionCode=IN&key=${API_KEY}`,
       {
@@ -33,23 +26,17 @@ export default function Home() {
         },
       }
     );
-    // console.log(data);
     const data = await res.json();
     setNextPage(data.nextPageToken);
-    Videos = [...Videos, ...data.items];
-    console.log(data);
+    setVideos([...videos, ...data.items]);
     setLoading(false);
   };
-
   const fetchNextVideos = async () => {
     const {
       credential: { oauthAccessToken },
     } = JSON.parse(token);
-    console.log(oauthAccessToken);
-
     const API = process.env.NEXT_PUBLIC_YOUTUE_API;
     const API_KEY = process.env.NEXT_PUBLIC_GCP_YOUTUBE_APIKEY;
-    console.log("HIT");
     const res = await fetch(
       `${API}videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=20&pageToken=${nextPage}&regionCode=IN&key=${API_KEY}`,
       {
@@ -61,24 +48,29 @@ export default function Home() {
       }
     );
     const data = await res.json();
-    console.log(data);
-    Videos = [...Videos, ...data.items];
+    setVideos([...videos, ...data.items]);
     setNextPage(data.nextPageToken);
     if (data.nextPageToken === undefined) {
       setIsTokenPresent(false);
     }
   };
-
   useEffect(() => {
     fetchPopular();
   }, []);
 
   return (
     <div className="m-10">
+      <Head>
+        <title>u-tube</title>
+        <meta
+          name="description"
+          content="a basic youtube which is not throwing ads "
+        />
+      </Head>
       <Header />
       {loading === false ? (
         <InfiniteScroll
-          dataLength={Videos.length}
+          dataLength={videos.length}
           next={fetchNextVideos}
           hasMore={isTokenPresent}
           loader={<>lodaing data</>}
@@ -90,7 +82,7 @@ export default function Home() {
         >
           <div className="mx-auto ">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {Videos.map((item) => (
+              {videos.map((item) => (
                 <Card item={item} key={item.id} />
               ))}
             </div>
