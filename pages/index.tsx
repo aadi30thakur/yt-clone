@@ -88,10 +88,12 @@ export default function Home() {
             </p>
           }
         >
-          <div className="flex flex-wrap -mx-10 overflow-hidden cursor-pointer sm:-mx-3 md:-mx-6 lg:-mx-6 xl:-mx-8">
-            {Videos.map((item) => (
-              <Card item={item} key={item.id} />
-            ))}
+          <div className="mx-auto ">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {Videos.map((item) => (
+                <Card item={item} key={item.id} />
+              ))}
+            </div>
           </div>
         </InfiniteScroll>
       ) : (
